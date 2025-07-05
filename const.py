@@ -21,7 +21,6 @@ JOIN ProdutosFinanciados pf ON pc.ProdutoID = pf.ProdutoID
 LEFT JOIN ParcelasCredito p ON pc.SolicitacaoID = p.SolicitacaoID
 WHERE pc.Status = 'Aprovado'
 GROUP BY c.ClienteID, pf.NomeComercial, pc.ValorSolicitado, pc.ValorTotalBem
-limit 100;
 """
 
 

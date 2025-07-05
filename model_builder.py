@@ -91,10 +91,60 @@ X_test = save_encoders(
 
 # Seleção de Atributos
 model = RandomForestClassifier()
+
 # Instancia o RFE
 selector = RFE(model, n_features_to_select=10, step=1)
 selector = selector.fit(X_train, y_train)
+
 # Transforma os dados
 X_train = selector.transform(X_train)
 X_test = selector.transform(X_test)
-joblib.dump(selector, './objects/selector.joblib')
+joblib.dump(selector, "./objects/selector.joblib")
+
+
+keras_model = tf.keras.Sequential(
+    [
+        tf.keras.layers.Dense(128, activation="relu", input_shape=(X_train.shape[1],)),
+        tf.keras.layers.Dropout(0.3),
+        tf.keras.layers.Dense(64, activation="relu"),
+        tf.keras.layers.Dropout(0.3),
+        tf.keras.layers.Dense(32, activation="relu"),
+        tf.keras.layers.Dropout(0.3),
+        tf.keras.layers.Dense(1, activation="sigmoid"),
+    ]
+)
+
+# otimizer
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+keras_model.compile(
+    optimizer=optimizer,
+    loss="binary_crossentropy",
+    metrics=["accuracy"],
+)
+
+
+# treinar
+keras_model.fit(
+    X_train,
+    y_train,
+    validation_split=0.2,  # 20% dos dados de treino para validação
+    epochs=500,
+    batch_size=10,
+    verbose=1,
+)
+
+
+# salvar modelo
+keras_model.save("./objects/model.keras")
+
+y_pred = keras_model.predict(X_test)
+y_pred = (y_pred > 0.5).astype(int)
+
+# modelo avaliado
+
+print("Classification Report:")
+keras_model.evaluate(X_test, y_test)
+
+#metricas
+print("metrics Report:")
+print(classification_report(y_test, y_pred))
