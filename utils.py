@@ -1,8 +1,13 @@
 import os
 from fuzzywuzzy import process
+import lime
+import lime.lime_tabular
+import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import joblib
+
+import const
 
 
 def substitui_nulos(df):

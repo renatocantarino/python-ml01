@@ -24,6 +24,26 @@ GROUP BY c.ClienteID, pf.NomeComercial, pc.ValorSolicitado, pc.ValorTotalBem
 """
 
 
+scalers = [
+    "tempoprofissao",
+    "renda",
+    "idade",
+    "dependentes",
+    "valorsolicitado",
+    "valortotalbem",
+    "proporcaosolicitadototal",
+]
+
+
+encoders = [
+    "Profissao",
+    "TipoResidencia",
+    "Escolaridade",
+    "EstadoCivil",
+    "Produto",
+]
+
+
 profissoes_validas = [
     "Advogado",
     "Arquiteto",
