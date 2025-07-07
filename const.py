@@ -34,15 +34,14 @@ scalers = [
     "proporcaosolicitadototal",
 ]
 
-
 encoders = [
-    "Profissao",
-    "TipoResidencia",
-    "Escolaridade",
-    "EstadoCivil",
-    "Produto",
+    "profissao",
+    "tiporesidencia",
+    "escolaridade",
+    "score",
+    "estadocivil",
+    "produto",
 ]
-
 
 profissoes_validas = [
     "Advogado",

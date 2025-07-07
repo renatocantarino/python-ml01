@@ -53,41 +53,19 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # normaliza os dados
-X_test = save_scalers(
-    X_test,
-    [
-        "tempoprofissao",
-        "renda",
-        "idade",
-        "dependentes",
-        "valorsolicitado",
-        "valortotalbem",
-        "proporcaosolicitadototal",
-    ],
-)
-X_train = save_scalers(
-    X_train,
-    [
-        "tempoprofissao",
-        "renda",
-        "idade",
-        "dependentes",
-        "valorsolicitado",
-        "valortotalbem",
-        "proporcaosolicitadototal",
-    ],
-)
+X_test = save_scalers(X_test, const.scalers)
+X_train = save_scalers(X_train, const.scalers)
 
 mapeamento = {"ruim": 0, "bom": 1}
 y_train = np.array([mapeamento[item] for item in y_train])
 y_test = np.array([mapeamento[item] for item in y_test])
 X_train = save_encoders(
     X_train,
-    ["profissao", "tiporesidencia", "escolaridade", "score", "estadocivil", "produto"],
+    const.encoders,
 )
 X_test = save_encoders(
     X_test,
-    ["profissao", "tiporesidencia", "escolaridade", "score", "estadocivil", "produto"],
+    const.encoders,
 )
 
 
@@ -139,42 +117,19 @@ print("metrics Report:")
 print(classification_report(y_test, y_pred))
 
 
-def model_predict(data_asarray):
-    data_asframe = pd.DataFrame(data_asarray, columns=X_train.columns)
-    data_asframe = save_scalers(
-        data_asframe,
-        [
-            "tempoprofissao",
-            "renda",
-            "idade",
-            "dependentes",
-            "valorsolicitado",
-            "valortotalbem",
-            "proporcaosolicitadototal",
-        ],
-    )
-    data_asframe = save_encoders(
-        data_asframe,
-        [
-            "profissao",
-            "tiporesidencia",
-            "escolaridade",
-            "score",
-            "estadocivil",
-            "produto",
-        ],
-    )
-    predictions = keras_model.predict(data_asframe)
-    return np.hstack((1 - predictions, predictions))
-
-
 explainer = lime.lime_tabular.LimeTabularExplainer(
     X_train.values,
     feature_names=X_train.columns,
     class_names=["ruim", "bom"],
     mode="classification",
 )
-exp = explainer.explain_instance(X_test.values[1], model_predict, num_features=10)
+exp = explainer.explain_instance(
+    X_test.values[1],
+    lambda arr: prepare_model_to_explain(
+        arr, keras_model, X_train.columns, const.scalers, const.encoders
+    ),
+    num_features=10,
+)
 # gera html
 exp.save_to_file("lime_explanation.html")
 

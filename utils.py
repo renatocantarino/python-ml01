@@ -55,5 +55,40 @@ def save_encoders(df, nome_colunas):
     return df
 
 
+def load_scalers(df, collum_names):
+    ensure_objects_folder()
+    scalers = {}
+    for name in collum_names:
+        try:
+            scaler = joblib.load(f"./objects/scaler{name}.joblib")
+            df[name] = scaler.transform(df[[name]])
+            return df
+        except FileNotFoundError:
+            print(f"Scaler for {name} not found.")
+
+
+def load_encoders(df, collum_names):
+    ensure_objects_folder()
+    encoders = {}
+    for name in collum_names:
+        try:
+            encoder = joblib.load(f"./objects/labelencoder{name}.joblib")
+            df[name] = encoder.transform(df[name])
+            return df
+        except FileNotFoundError:
+            print(f"Encoder for {name} not found.")
+    return name
+
+
+def prepare_model_to_explain(
+    data_asarray, keras_model, X_train_columns, scaler_features, encoder_features
+):
+    data_asframe = pd.DataFrame(data_asarray, columns=X_train_columns)
+    data_asframe = save_scalers(data_asframe, scaler_features)
+    data_asframe = save_encoders(data_asframe, encoder_features)
+    predictions = keras_model.predict(data_asframe)
+    return np.hstack((1 - predictions, predictions))
+
+
 def ensure_objects_folder():
     os.makedirs("./objects", exist_ok=True)
