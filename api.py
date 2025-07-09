@@ -1,15 +1,12 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 import pandas as pd
 import joblib
 from utils import *
 
 
 app = Flask(__name__)
-CORS(app)
-
-model = load_model("./objects/model.keras")
+model = tf.keras.models.load_model("./objects/model.keras")
 selector = joblib.load("./objects/selector.joblib")
 
 
@@ -21,6 +18,7 @@ def predict():
 
     df = pd.DataFrame(input_data)
     df = load_scalers(df, const.scalers)
+
     df = load_encoders(df, const.encoders)
     df = selector.transform(df)
 

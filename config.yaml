@@ -1,10 +1,9 @@
 database_config:
-  dbname: 'novadrivebank'
-  user: 'etlreadonlybank'
-  password: 'novadrive376A@'
-  host: ''
+  dbname: 'a9ef00e3-3eeb-4721-af8e-952f4367f43a'
+  user: 'a9ef00e3-3eeb-4721-af8e-952f436153a'
+  password: 'a9ef00e3-3eeb-4721-af8e-952f4367f43a@'
+  host: 'a9ef00e3-3eeb-4721-af8e-952f4367f43a.aws.database.amazonaws.com'
 
-api:
-  url: 'http://127.0.0.0.1:5000/predict'
-  token: 'your_api  
-  
+url_api:
+   url: 'http://127.0.0.1:5000/predict'
+   

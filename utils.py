@@ -56,28 +56,19 @@ def save_encoders(df, nome_colunas):
 
 
 def load_scalers(df, collum_names):
-    ensure_objects_folder()
-    scalers = {}
-    for name in collum_names:
-        try:
-            scaler = joblib.load(f"./objects/scaler{name}.joblib")
-            df[name] = scaler.transform(df[[name]])
-            return df
-        except FileNotFoundError:
-            print(f"Scaler for {name} not found.")
+    for nome_coluna in collum_names:
+        nome_arquivo_scaler = f"./objects/scaler{nome_coluna}.joblib"
+        scaler = joblib.load(nome_arquivo_scaler)
+        df[nome_coluna] = scaler.transform(df[[nome_coluna]])
+    return df
 
 
 def load_encoders(df, collum_names):
-    ensure_objects_folder()
-    encoders = {}
-    for name in collum_names:
-        try:
-            encoder = joblib.load(f"./objects/labelencoder{name}.joblib")
-            df[name] = encoder.transform(df[name])
-            return df
-        except FileNotFoundError:
-            print(f"Encoder for {name} not found.")
-    return name
+    for nome_coluna in collum_names:
+        nome_arquivo_encoder = f"./objects/labelencoder{nome_coluna}.joblib"
+        label_encoder = joblib.load(nome_arquivo_encoder)
+        df[nome_coluna] = label_encoder.transform(df[nome_coluna])
+    return df
 
 
 def prepare_model_to_explain(
