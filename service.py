@@ -1,17 +1,24 @@
+import os
+import sys
 import pandas as pd
 import yaml
 import psycopg2
 
-def fetch_data_from_db(sql_query):
-    try:
-        with open('config.yaml', 'r') as file:
-            config = yaml.safe_load(file)            
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from utils import load_yaml_config
+
+def fetch_data_from_db(sql_query):
+    try:        
+        yaml_loaded = load_yaml_config()
+        if not yaml_loaded:
+            raise ValueError("YAML configuration could not be loaded.")
+        
         con = psycopg2.connect(
-            dbname=config['database_config']['dbname'], 
-            user=config['database_config']['user'], 
-            password=config['database_config']['password'], 
-            host=config['database_config']['host']
+            dbname=yaml_loaded['database_config']['dbname'], 
+            user=yaml_loaded['database_config']['user'], 
+            password=yaml_loaded['database_config']['password'], 
+            host=yaml_loaded['database_config']['host']
         )
 
         cursor = con.cursor()

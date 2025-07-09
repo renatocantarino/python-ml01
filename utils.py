@@ -1,13 +1,25 @@
 import os
 from fuzzywuzzy import process
-import lime
-import lime.lime_tabular
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 import joblib
+import yaml
 
-import const
+
+def load_yaml_config(filepath='config.yaml'):
+    """
+    Load configuration from a YAML file.
+    
+    Args:
+        filepath (str): Path to the YAML configuration file.
+        
+    Returns:
+        dict: Configuration data loaded from the YAML file.
+    """
+    with open(filepath, 'r') as file:
+        config = yaml.safe_load(file)
+    return config
 
 
 def substitui_nulos(df):
